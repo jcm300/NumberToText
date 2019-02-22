@@ -16,6 +16,7 @@ mapping_units = {
                 }
 
 mapping_dozens = {
+                    "0":"",
                     "10":"dez",
                     "11":"onze",
                     "12":"doze",
@@ -37,6 +38,7 @@ mapping_dozens = {
                 }
 
 mapping_hundreds = {
+                    "0":"",
                     "100":"cem",
                     "1":"cento",
                     "2":"duzentos",
@@ -61,7 +63,6 @@ mapping_ord = {
 def toString(text):
     out = ""
     sizeT = size = len(text)
-    print(text)
     while size>0:
         rest = size % 3
         if rest == 1:
@@ -80,8 +81,8 @@ def toString(text):
                 out += " e "
         else: #rest == 0
             out += mapping_hundreds[text[sizeT-size]] + " e "
-        
         size -= 1
+    
     return out
 
 def number_to_text(text):
