@@ -53,11 +53,11 @@ mapping_hundreds = {
 
 mapping_ord = {
                 0: " ",
-                1: " mil e ",
-                2: " milhões e ",
-                3: " mil milhões e ",
-                4: " bilhões e ",
-                5: " triliões e "
+                1: " mil ",
+                2: " milhões ",
+                3: " mil milhões ",
+                4: " bilhões ",
+                5: " triliões "
               }
 
 def toString(text):
@@ -69,10 +69,11 @@ def toString(text):
             if sizeT-size-1 < sizeT:
                 if text[sizeT-size-1] != "1":
                     out += mapping_units[text[sizeT-size]]
+                    out += mapping_ord[size // 3]
             else:
                 out += mapping_units[text[sizeT-size]]
-
-            out += mapping_ord[size // 3]
+                out += mapping_ord[size // 3]
+                out += " e "
         elif rest == 2:
             if text[sizeT-size] == "1":
                 out += mapping_dozens[text[sizeT-size]+text[sizeT-size+1]]
@@ -87,6 +88,7 @@ def toString(text):
 
 def number_to_text(text):
     text = re.sub(r"[0-9]+",lambda x: toString(x[0]),text)
+    text = re.sub(r",","vírgula ",text)
     return text
 
 def number_to_text_file(f):
