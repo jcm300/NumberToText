@@ -61,11 +61,20 @@ mapping_ord = {
                 5: " triliões"
               }
 
+mapping_ord_um = {
+                0: "um",
+                1: "mil",
+                2: "um milhão",
+                3: "mil milhões",
+                4: "um bilhão",
+                5: "um trilião"
+              }
+
 def toString(text):
     # String a devolver
     out = ""
     if text[0]==",": #se começar por uma virgula colocar já no resultado final
-        out += " virgula " 
+        out += " vírgula " 
     # remover espaços e virgulas
     text = [t for t in text if t!=" " and t!=","]
     #tamanho do número recebido
@@ -86,9 +95,12 @@ def toString(text):
                     if text[sizeT-size-1] != "1": #se esse valor antes é diferente de 1, de forma a garantir que n entra em conflito com o caso especial das dezenas
                         out += mapping_units[text[sizeT-size]]
                         out += mapping_ord[size // 3]
-                else: #senao existe valor antes então é apenas unidade
-                    out += mapping_units[text[sizeT-size]]
-                    out += mapping_ord[size // 3]
+                else: #senao, não tem valor antes, é o primeiro algarismo
+                    if text[sizeT-size] != "1": #se o algarismo for diferente de 1
+                        out += mapping_units[text[sizeT-size]]
+                        out += mapping_ord[size // 3]
+                    else:
+                        out += mapping_ord_um[size // 3]
                 if sizeT-size+1 < sizeT and text[sizeT-size+1]!="0": #se existe um número|,|espaço a seguir e é diferente de 0
                     out += " e "
             elif rest == 2: #ordem das dezenas
@@ -99,14 +111,19 @@ def toString(text):
                     if text[sizeT-size+1]!="0": #se o algarismo das unidades é diferente de 0
                         out += " e "
             else: #rest == 0, ordem das centenas
-                out += mapping_hundreds[text[sizeT-size]]
-                if text[sizeT-size+1]!="0": #se o algarismo das dezenas é diferente de 0
-                    out += " e "
+                if text[sizeT-size]+text[sizeT-size+1]+text[sizeT-size+2]=="100":
+                    out += mapping_hundreds["100"]
+                else:
+                    out += mapping_hundreds[text[sizeT-size]]
+                    if text[sizeT-size+1]!="0": #se o algarismo das dezenas é diferente de 0
+                        out += " e "
             size -= 1
     
     return out
 
 def number_to_text(text):
+    #adicionar um espaço entre números e simbolos especiais 
+    text = re.sub(r"([0-9]+)([€%$])",r"\1 \2",text)
     #match com a parte decimal do número
     text = re.sub(r" ?,([0-9 ]+)?[0-9]",lambda x: toString(x[0]),text)
     #match com a parte inteira do número que tem de começar e acabar num número podendo ter espaços pelo meio
