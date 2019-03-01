@@ -1,6 +1,6 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
-import re, sys
+import re, sys, getopt
 
 mapping_units = {
                     "0":"",
@@ -121,6 +121,7 @@ def toString(text):
     
     return out
 
+#TODO: Melhorar
 def number_to_text(text):
     #adicionar um espaço entre números e simbolos especiais 
     text = re.sub(r"([0-9]+)([€%$])",r"\1 \2",text)
@@ -132,14 +133,74 @@ def number_to_text(text):
     text = re.sub(r"[0-9]",lambda x: toString(x[0]),text)
     return text
 
-def number_to_text_file(f):
-    content = f.read()
-    return number_to_text(content)
+def text_to_number(text):
+    #remover ordens de grandeza
+    for ord in list(mapping_ord.values())[1:][::-1]:
+        text = re.sub(r""+ord+"( de)?","",text)
+    for ord in list(mapping_ord_um.values())[::-1]:
+        text = re.sub(r" "+ord+"( de)?","",text)
+    #converter virgula
+    text = re.sub(r" vírgula",",",text)
+    #converter centenas para números
+    for item in list(mapping_hundreds.items())[1:]:
+        text = re.sub(r" "+item[1],item[0],text)
+    #converter dezenas para números
+    for item in list(mapping_dozens.items())[1:][::-1]:
+        text = re.sub(r" "+item[1],item[0],text)
+    #converter unidades para números exceto 0
+    for item in list(mapping_units.items())[2:]:
+        text = re.sub(r" "+item[1],item[0],text)
+    #converter zero para 0
+    text = re.sub(r"zero","0",text)
+    return text
 
-if len(sys.argv)==2:
-    input = open(sys.argv[1])
+def printHelp():
+    print("Usage: ./NumberToText.py [OPTIONS] [FILENAME]")
+    print("  or:  ./NumberToText.py [OPTIONS]")
+    print("Default behaviour: Convert numbers to portuguese text")
+    print("\nOptions:")
+    print("  -r\tConvert portuguese text to numbers")
+    print("  -h\tHelp")
+    print("\nExample: ./NumberToText.py text.txt")
+
+#main
+
+try:
+    options, remainder = getopt.getopt(sys.argv[1:], 'rh')
+    dict_opts = dict(options)
+except:
+    printHelp()
+    sys.exit(1)
+
+reversed = dict_opts.get('-r',None)
+help = dict_opts.get('-h',None)
+
+if help!=None:
+    printHelp()
+    sys.exit(1)
 else:
-    input = sys.stdin
+    # read from STDIN if file is not passed as argument
+    if remainder:
+        try:
+            input = open(remainder[0])
+        except:
+            print("Wrong file path! File doesn't exist?")
+            printHelp()
+            sys.exit(1)
+    else:
+        input = sys.stdin
 
-convertedText = number_to_text_file(input)
-print(convertedText)
+    convertedText = ""
+    try:
+        content = input.read()
+    except:
+        print("\nUse CTRL+D instead to get results!")
+        sys.exit(1)
+
+    # if -r option passed convert text to number, else convert number to text
+    if reversed!=None:
+        convertedText = text_to_number(content)
+    else:
+        convertedText = number_to_text(content)
+
+    print(convertedText)
