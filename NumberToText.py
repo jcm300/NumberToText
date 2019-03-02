@@ -70,6 +70,17 @@ mapping_ord_um = {
                 5: "um trilião"
               }
 
+mapping_ord_rev = {
+                "cem":"00",
+                "mil":"000",
+                "milhão":"000000",
+                "milhões":"000000",
+                "bilhão":"000000000000",
+                "bilhões":"000000000000",
+                "trilião":"000000000000000",
+                "triliões":"000000000000000"
+                  }
+
 def toString(text):
     # String a devolver
     out = ""
@@ -80,7 +91,7 @@ def toString(text):
     #tamanho do número recebido
     sizeT = size = len(text)
     # Se for apenas 0
-    if text=="0":
+    if sizeT==1 and text[0]=="0":
         out += mapping_units["zero"];    
     else:
         #percorre-se o número do mais signficativo para o menos significativo
@@ -129,25 +140,102 @@ def toString(text):
     return out
 
 def toNumber(text):
-    ##remover ordens de grandeza
-    #for ord in list(mapping_ord.values())[1:][::-1]:
-    #    text = re.sub(r" "+ord,"",text)
-    #for ord in list(mapping_ord_um.values())[::-1]:
-    #    text = re.sub(r" "+ord,"",text)
-    ##converter virgula
-    #text = re.sub(r" vírgula",",",text)
-    ##converter centenas para números
-    #for item in list(mapping_hundreds.items())[1:]:
-    #    text = re.sub(r" "+item[1],item[0],text)
-    ##converter dezenas para números
-    #for item in list(mapping_dozens.items())[1:][::-1]:
-    #    text = re.sub(r" "+item[1],item[0],text)
-    ##converter unidades para números exceto 0
-    #for item in list(mapping_units.items())[2:]:
-    #    text = re.sub(r" "+item[1],item[0],text)
-    ##converter zero para 0
-    #text = re.sub(r"zero","0",text)
-    return text
+    #valor a devolver com o número
+    out = ""
+    #separa a string por espaços
+    words = text.split()
+    #remove e e faz reverse da lista de palavras
+    words = [word for word in words if word!="e"][::-1]
+    
+    #saber se tem vírgula
+    haveComma = False
+    for word in words:
+        if word=="vírgula":
+            haveComma = True
+    
+    #converte palavra para números, os valores são adicionados
+    #por ordem inversa visto que estamos a percorrer o número
+    #por ordem inversa também
+    i=0 # contador geral
+    num=0 # contador de números, feito reset quando aparce a vírgula, ou quando aparece uma palavra de ordem
+    for word in words:
+        #se é uma virgula coloca uma
+        if word=="vírgula":
+            out = "," + out
+            num = 0
+        # senão é uma vígula
+        else:
+            #boolean pra saber se já encontrou a palavra
+            found = False
+            #procura nas centenas e coloca no out
+            for item in list(mapping_hundreds.items())[1:]:
+                if item[1]==word:
+                    #se não tem nenhum número após
+                    if num == 0 and len(item[0])==1:
+                        out = item[0] + "00" + out
+                        num += 3
+                    #se só tem um número após
+                    elif num == 1 and len(item[0])==1:
+                        out = item[0] + "0" + out
+                        num += 2
+                    # se tem dois números após
+                    else:
+                        out = item[0] + out
+                        num += len(item[0])
+                    found = True
+                    break
+            # senão estava nas centenas
+            if not found:
+                #procura nas dezenas
+                for item in list(mapping_dozens.items())[1:]:
+                    if item[1]==word:
+                        #se não tem nenhum número após
+                        if num == 0 and len(item[0])==1:
+                            out = item[0] + "0" + out
+                            num += 2
+                        # se tem um número após
+                        else:
+                            out = item[0] + out
+                            num += len(item[0])
+                        found = True
+                        break
+                # senão estava nas dezenas
+                if not found:
+                    #procura nas unidades
+                    for item in list(mapping_units.items())[2:]:
+                        if item[1]==word:
+                            out = item[0] + out
+                            found = True
+                            num += 1
+                            break
+                    #senao estava nas unidades
+                    if not found:
+                        # se zero entao coloca um zero
+                        if word == "zero":
+                            out = "0" + out
+                        else:
+                            #vê se o número não tem virgula
+                            if not haveComma:
+                                #se está no fim do número, então coloca os zeros de acordo com a ordem
+                                if i==0 or (i==1 and words[0]=="milhões"):
+                                    out = mapping_ord_rev[word] + out
+                                else:
+                                    #colocar o número de zeros necessários
+                                    if num == 0:
+                                        out = "000" + out
+                                    elif num == 1:
+                                        out = "00" + out
+                                    elif num == 2:
+                                        out = "0" + out
+                                num = 0
+                                # se é a ultima palavra então coloca um 1
+                                if len(words) == i+1:
+                                    out = "1" + out
+                            # se tem virgula, entao não converte pra número as grandezas
+                            else:
+                                out = " " + word + out
+        i += 1
+    return out
 
 def number_to_text(text):
     #adicionar um espaço entre números e simbolos especiais 
@@ -167,9 +255,12 @@ def text_to_number(text):
     validWords += list(mapping_hundreds.values())[1:]
     validWords += list(mapping_dozens.values())[1:][::-1]
     validWords += list(mapping_units.values())[1:]
-    validWords = " " + "| ".join(validWords) + "| e(?= )| vírgula"
+    # primeira palavra
+    validWordsF = "(" + "|".join(validWords) + ")"
+    # restantes palavras
+    validWords = "( " + "| ".join(validWords) + "| e(?= )| vírgula)"
     #sempre que encontrar um número em formato texto, converter para número
-    text = re.sub(r"("+validWords+")+",lambda x: toNumber(x[0]),text)
+    text = re.sub(r"(?<![A-Za-z])"+validWordsF+"(?=[ \n])"+validWords+"*",lambda x: toNumber(x[0]),text)
     return text
 
 def printHelp():
