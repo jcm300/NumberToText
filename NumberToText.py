@@ -54,11 +54,11 @@ mapping_hundreds = {
 
 mapping_ord = {
                 0: "",
-                1: " mil",
-                2: " milhões",
-                3: " mil milhões",
-                4: " bilhões",
-                5: " triliões"
+                1: "mil",
+                2: "milhões",
+                3: "mil milhões",
+                4: "bilhões",
+                5: "triliões"
               }
 
 mapping_ord_um = {
@@ -91,16 +91,23 @@ def toString(text):
         while size>0:
             rest = size % 3 #calcular a ordem
             if rest == 1: #ordem das unidades
+                div = size // 3
                 if sizeT-size-1>=0: 
                     if text[sizeT-size-1] != "1": #se esse valor antes é diferente de 1, de forma a garantir que n entra em conflito com o caso especial das dezenas
                         out += mapping_units[text[sizeT-size]]
-                        out += mapping_ord[size // 3]
+                        if div == 0:
+                            out += mapping_ord[div]
+                        else:
+                            out += " " + mapping_ord[div]
                 else: #senao, não tem valor antes, é o primeiro algarismo
                     if text[sizeT-size] != "1": #se o algarismo for diferente de 1
                         out += mapping_units[text[sizeT-size]]
-                        out += mapping_ord[size // 3]
+                        if div == 0:
+                            out += mapping_ord[div]
+                        else:
+                            out += " " + mapping_ord[div]
                     else:
-                        out += mapping_ord_um[size // 3]
+                        out += mapping_ord_um[div]
                 if sizeT-size+1 < sizeT and text[sizeT-size+1]!="0": #se existe um número|,|espaço a seguir e é diferente de 0
                     out += " e "
             elif rest == 2: #ordem das dezenas
@@ -121,7 +128,27 @@ def toString(text):
     
     return out
 
-#TODO: Melhorar
+def toNumber(text):
+    ##remover ordens de grandeza
+    #for ord in list(mapping_ord.values())[1:][::-1]:
+    #    text = re.sub(r" "+ord,"",text)
+    #for ord in list(mapping_ord_um.values())[::-1]:
+    #    text = re.sub(r" "+ord,"",text)
+    ##converter virgula
+    #text = re.sub(r" vírgula",",",text)
+    ##converter centenas para números
+    #for item in list(mapping_hundreds.items())[1:]:
+    #    text = re.sub(r" "+item[1],item[0],text)
+    ##converter dezenas para números
+    #for item in list(mapping_dozens.items())[1:][::-1]:
+    #    text = re.sub(r" "+item[1],item[0],text)
+    ##converter unidades para números exceto 0
+    #for item in list(mapping_units.items())[2:]:
+    #    text = re.sub(r" "+item[1],item[0],text)
+    ##converter zero para 0
+    #text = re.sub(r"zero","0",text)
+    return text
+
 def number_to_text(text):
     #adicionar um espaço entre números e simbolos especiais 
     text = re.sub(r"([0-9]+)([€%$])",r"\1 \2",text)
@@ -134,24 +161,15 @@ def number_to_text(text):
     return text
 
 def text_to_number(text):
-    #remover ordens de grandeza
-    for ord in list(mapping_ord.values())[1:][::-1]:
-        text = re.sub(r""+ord+"( de)?","",text)
-    for ord in list(mapping_ord_um.values())[::-1]:
-        text = re.sub(r" "+ord+"( de)?","",text)
-    #converter virgula
-    text = re.sub(r" vírgula",",",text)
-    #converter centenas para números
-    for item in list(mapping_hundreds.items())[1:]:
-        text = re.sub(r" "+item[1],item[0],text)
-    #converter dezenas para números
-    for item in list(mapping_dozens.items())[1:][::-1]:
-        text = re.sub(r" "+item[1],item[0],text)
-    #converter unidades para números exceto 0
-    for item in list(mapping_units.items())[2:]:
-        text = re.sub(r" "+item[1],item[0],text)
-    #converter zero para 0
-    text = re.sub(r"zero","0",text)
+    #palavras válidas para um número em extenso
+    validWords = list(mapping_ord.values())[1:][::-1]
+    validWords += list(mapping_ord_um.values())[1:][::-1]
+    validWords += list(mapping_hundreds.values())[1:]
+    validWords += list(mapping_dozens.values())[1:][::-1]
+    validWords += list(mapping_units.values())[1:]
+    validWords = " " + "| ".join(validWords) + "| e(?= )| vírgula"
+    #sempre que encontrar um número em formato texto, converter para número
+    text = re.sub(r"("+validWords+")+",lambda x: toNumber(x[0]),text)
     return text
 
 def printHelp():
