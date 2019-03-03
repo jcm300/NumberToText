@@ -6,6 +6,7 @@ qw 12000000 – doze milhões
 iq 12 000 100 – doze milhões e cem
 iq 12 123 200 – doze milhões cento e vinte e três mil e duzentos
 gf 400003017 – quatrocentos milhões três mil e dezassete
+sdfds 999999999 – novecentos e noventa e nove milhões novecentos e noventa e nove mil novecentos e noventa e nove
 oi 788000984 – setecentos e oitenta e oito milhões novecentos e oitenta e quatro
 
 94 – noventa e quatro
