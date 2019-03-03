@@ -104,4 +104,4 @@ def replacer(text):
     text = re.sub(r"0*9","nove",text)
     return text
 
-print(numberToText("i.txt"))
+print(numberToText("test.txt"))
