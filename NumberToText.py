@@ -155,7 +155,7 @@ def toNumber(text):
     #por ordem inversa visto que estamos a percorrer o número
     #por ordem inversa também
     i=0 # contador geral
-    num=0 # contador de números, feito reset quando aparce a vírgula, ou quando aparece uma palavra de ordem
+    num=0 # contador de números, feito reset quando aparece a vírgula
     for word in words:
         #se é uma virgula coloca uma
         if word=="vírgula":
@@ -169,11 +169,11 @@ def toNumber(text):
             for item in list(mapping_hundreds.items())[1:]:
                 if item[1]==word:
                     #se não tem nenhum número após
-                    if num == 0 and len(item[0])==1:
+                    if num % 3 == 0 and len(item[0])==1:
                         out = item[0] + "00" + out
                         num += 3
                     #se só tem um número após
-                    elif num == 1 and len(item[0])==1:
+                    elif num % 3 == 1 and len(item[0])==1:
                         out = item[0] + "0" + out
                         num += 2
                     # se tem dois números após
@@ -188,7 +188,7 @@ def toNumber(text):
                 for item in list(mapping_dozens.items())[1:]:
                     if item[1]==word:
                         #se não tem nenhum número após
-                        if num == 0 and len(item[0])==1:
+                        if num % 3 == 0 and len(item[0])==1:
                             out = item[0] + "0" + out
                             num += 2
                         # se tem um número após
@@ -220,6 +220,7 @@ def toNumber(text):
                                 else:
                                     #colocar o número de zeros necessários
                                     out = "0"*(len(mapping_ord_rev[word])-num) + out
+                                    num += len(mapping_ord_rev[word])-num
                                 # se é a ultima palavra então coloca um 1
                                 if len(words) == i+1:
                                     out = "1" + out
