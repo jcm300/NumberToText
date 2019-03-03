@@ -1,14 +1,11 @@
 #!/usr/bin/python3
 
-from collections import Counter
 import re
-import unidecode
 
 def numberToText(file):
-    text=open(file).read()
+    text = open(file).read()
     text = replacer(text)
-    print(text)
-
+    return text
 
 def replacer(text):
     text = re.sub(r"([0-9]+)\,([0-9]+)",r"\1 vírgula \2",text)
@@ -104,4 +101,4 @@ def replacer(text):
     text = re.sub(r"0*9","nove",text)
     return text
 
-print(numberToText("test.txt"))
+print(numberToText("../testFiles/test.txt"))
