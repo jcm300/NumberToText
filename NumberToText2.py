@@ -8,6 +8,9 @@ def numberToText(text):
 #   MILHÕES
 #	substituição relativas aos números >= a 1 milhão
 #	extrai dígitos != 0 para futura transformação
+#   admite números que separem centenas/milhares por espaços, como os restantes casos
+#   tem em conta o número de zeros e a quantidade de dígitos por cada grupos para uma correta captura das partes pretendidas
+#   como também a necessidade ou não de imprimir o " e " quando apropriado
     text = re.sub(r"(\D)1[ ]000[ ]000([ ,.?!\r\n€$%])|(\D)1000000([ ,.?!\r\n€$%])",r"\1\3um milhão\2\4",text)
     text = re.sub(r"(\D)([0-9]{1,3})[ ]000[ ]000([ ,.?!\r\n€$%])|(\D)([0-9]{1,3})000000([ ,.?!\r\n€$%])",r"\1\2\4\5 milhões\3\6",text)
     text = re.sub(r"(\D)([0-9]{1,3})[ ]000[ ]([0-9]00)([ ,.?!\r\n€$%])|(\D)([0-9]{1,3})[ ]000[ ](0[0-9]{2})([ ,.?!\r\n€$%])",r"\1\2\5\6 milhões e \3\4\7\8",text)
@@ -18,8 +21,8 @@ def numberToText(text):
 #   MILHARES
 #	substituição relativas aos números >= a 1 milhar
 #	extrai dígitos != 0 para futura transformação
-#	regras para os diferentes casos
-#	xx mil e ... vs xx mil ...
+#   tem em conta o número de zeros e a quantidade de dígitos por cada grupos para uma correta captura das partes pretendidas
+#   como também a necessidade ou não de imprimir o " e " quando apropriado
     text = re.sub(r"(\D)1[ ]?000([ ,.?!\r\n€$%])",r"\1mil\2 ",text) #1000
     text = re.sub(r"(\D)1[ ]?([0-9]00)([ ,.?!\r\n€$%])|(\D)1[ ]?(0[0-9]{2})([ ,.?!\r\n€$%])",r"\1\4mil e \2\3\5\6 ",text) #1xxx -> mil e ... em vez de "1 mil e ..."
     text = re.sub(r"(\D)1[ ]?([0-9]{3})([ ,.?!\r\n€$%])",r"\1mil \2\3 ",text) #1xxx -> mil e ... em vez de "1 mil e ..."
@@ -30,6 +33,12 @@ def numberToText(text):
     text = re.sub(r"(0*[1-9][0-9]{0,2})[ ]?([0-9]{3})([ ,.?!\r\n€$%])",r"\1 mil \2\3",text) #31400, 234200, ...
 
     #CENTENAS
+    # Deteta números de 100 até 999
+    # nos múltiplos de cem a tranformação para texto é direta
+    # nos restantes casos:
+    # - é detetado o algarimos das centenas
+    # - feita a substituição para o seu equivalente textual
+    # - os restante algarimos mantêm-se para posterior transformação nas regras adequadas
     text = re.sub(r"0*100",r"cem",text)
     text = re.sub(r"0*1([0-9]{2})",r"cento e \1",text)
     text = re.sub(r"0*200",r"duzentos",text)
@@ -50,6 +59,11 @@ def numberToText(text):
     text = re.sub(r"0*9([0-9]{2})",r"novecentos e \1",text)
 
     #DEZENAS
+    # semelhante à anterior (centenas)
+    # a) substitui números 20-99 múltiplos de 10 pelo seu equivalente textual
+    # b) para os restantes nºs, substitui o dígito das dezenas pelo texto + " e "
+    # para cada caso, a) é definido primeiro que b)
+    # caso contrário os nºs seriam apanhados por b) que é mais abrangente
     text = re.sub(r"0*20",r"vinte",text)
     text = re.sub(r"0*2([0-9])",r"vinte e \1",text)
     text = re.sub(r"0*30",r"trinta",text)
@@ -67,7 +81,10 @@ def numberToText(text):
     text = re.sub(r"0*90",r"noventa",text)
     text = re.sub(r"0*9([0-9])",r"noventa e \1",text)
 
-#	10-19
+#   Tranformação dos números 10-19 para o seu equivalente por extenso
+#   este conjunto de regras têm que ser declaradas acima das relativas às UNIDADES
+#   caso contrário, essas iriam interferir na correta deteção já que
+#   iriam apanhar individualmente cada um dos dígitos 
     text = re.sub(r"0*10","dez",text)
     text = re.sub(r"0*11","onze",text)
     text = re.sub(r"0*12","doze",text)
@@ -79,7 +96,10 @@ def numberToText(text):
     text = re.sub(r"0*18","dezoito",text)
     text = re.sub(r"0*19","dezanove",text)
 
-#	UNIDADES
+#   UNIDADES
+#   Tranformação dos números 1-9 para o seu equivalente por extenso
+#   caso apareçam 0s no início, o dígito é corretamente detetado
+#   este pormenor é importante para unidades em números maiores (e.g 7006)
     text = re.sub(r"0*1","um",text)
     text = re.sub(r"0*2","dois",text)
     text = re.sub(r"0*3","três",text)
@@ -100,16 +120,28 @@ def replacerToNumber(text):
     text = re.sub(r"([a-z]+) vírgula ([a-z]+)",r"\1,\2",text)
 
 #   MILHÕES
+#   tranformação dos números na casa dos milhões
+#   duas regras:
+#   a primeira para números neste intervalo superiores a 1000000, nos quais se captura as palavras anteriores e posteriores
+#    e se remove o "milhões" já que não é relevante para a versão númerica
+#   a segunda, direta, para o número 1000000 (versão numérica)
     text = re.sub(r"(\w)milhões ([a-z]+)([%€.!?\n\r])", r"\1\2\3",text)
     text = re.sub("um milhão","1 000 000",text)
 
 #   MILHARES
+#   tranformação dos números 1000-999999
+#   duas regras:
+#   a primeira para números neste intervalo superiores a 1000, nos quais se captura as palavras anteriores e posteriores
+#    e se remove o "mil" já que não é relevante para a versão númerica
+#   a segunda, direta, para o número 1000(mil)
     text = re.sub(r"(\w)mil ([a-z]+)([.!?\n\r%€])", r"\1\2\3",text)
     text = re.sub(r"mil([^h])",r"1000\1",text)
 
 #   CENTENAS
 #   3 regras base para os 3 casos possíveis 
-#   (em função do número de zeros)
+#   em função da presença/ausência do " e ", o que se deve imprimir difere
+#   quando existe " e " é necessária tranformação dos dígitos que se seguem e impressão dos 0s correspondentes
+#   nos múltpiplos de 100 a tradução é direta e final
     text = re.sub(r"cento e (um|dois|três|quatro|cinco|seis|sete|oito|nove)", r"10\1",text)
     text = re.sub(r"cento e ([a-z])|cento e ([a-z]+[ ][a-z]+)", r"1\1\2",text)
     text = re.sub("cem","100",text)
@@ -139,6 +171,11 @@ def replacerToNumber(text):
     text = re.sub("novecentos","900",text)
 
 #   DEZENAS
+#   Transformação dos números de 20 a 99 de extenso para a sua versão númerica
+#   para cada dezena, duas regras
+#   1. casos em que existe " e " para números n múltiplos de 10 (e.g. vinte e um)
+#   2. restantes (e.g. vinte)
+#   estes diferem em imprimir um zero como dígito das unidades vs manter dígito para deteção nas regras abaixo
     text = re.sub(r"0?vinte e ([a-z]+)",r"2\1",text)
     text = re.sub(r"0?vinte","20",text)
     text = re.sub(r"0?trinta e ([a-z]+)",r"3\1",text)
@@ -156,7 +193,7 @@ def replacerToNumber(text):
     text = re.sub(r"0?noventa e ([a-z]+)",r"9\1",text)
     text = re.sub(r"0?noventa","90",text)
 
-#   10-19
+#   Transformação dos números de 10 a 19 de extenso para a sua versão númerica
     text = re.sub(r"0?onze","11",text)
     text = re.sub(r"0?doze","12",text)
     text = re.sub(r"0?treze","13",text)
@@ -169,6 +206,8 @@ def replacerToNumber(text):
     text = re.sub(r"0?dez","10",text)
 
 #   UNIDADES
+#   Transformação dos dígitos 1..9 de extenso para a sua versão númerica
+#   estas regras encontram-se no fim da função já que os dígitos correspondem à porção mais pequena possível de um número
     text = re.sub("um","1",text)
     text = re.sub("dois","2",text)
     text = re.sub("três","3",text)
@@ -183,6 +222,8 @@ def replacerToNumber(text):
 #   função que remata as substituições feitas anteriormente
 #   tem em atenção vários casos
 #   nomeadamente as variâncias no número de zeros
+#   e.g. mil e noventa e sete teria como output da função anterior
+#   1000 e 97. a função aggregate tranforma corretamente em 1097
 def aggregate(text):
     text = re.sub(r"1000 e ([0-9]{3})",r"1\1",text)
     text = re.sub(r"1000 ([0-9]{3})",r"1\1",text)
