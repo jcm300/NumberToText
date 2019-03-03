@@ -4,7 +4,7 @@ from collections import Counter
 import re
 import unidecode
 
-def TextToNumber(file):
+def textToNumber(file):
     text = open(file).read()
     text = replacer(text)
     text2 = aggregate(text)
@@ -122,4 +122,4 @@ def aggregate(text):
     text = re.sub(r"([0-9])[ ]([0-9])",r"\1\2",text)
     return text
 
-print(TextToNumber("../testFiles/test.txt"))
+print(textToNumber("../testFiles/test.txt"))

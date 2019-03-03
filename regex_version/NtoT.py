@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
+from collections import Counter
 import re
+import unidecode
 
 def numberToText(file):
     text = open(file).read()
@@ -11,6 +13,8 @@ def replacer(text):
     text = re.sub(r"([0-9]+)\,([0-9]+)",r"\1 vírgula \2",text)
 
 #   MILHÕES
+#	substituição relativas aos números >= a 1 milhão
+#	extrai dígitos != 0 para futura transformação
     text = re.sub(r"(\D)1[ ]000[ ]000([ ,.?!\r\n€$%])|(\D)1000000([ ,.?!\r\n€$%])",r"\1\3um milhão\2\4",text)
     text = re.sub(r"(\D)([0-9]{1,3})[ ]000[ ]000([ ,.?!\r\n€$%])|(\D)([0-9]{1,3})000000([ ,.?!\r\n€$%])",r"\1\2\4\5 milhões\3\6",text)
     text = re.sub(r"(\D)([0-9]{1,3})[ ]000[ ]([0-9]00)([ ,.?!\r\n€$%])|(\D)([0-9]{1,3})[ ]000[ ](0[0-9]{2})([ ,.?!\r\n€$%])",r"\1\2\5\6 milhões e \3\4\7\8",text)
@@ -19,6 +23,8 @@ def replacer(text):
 
 
 #   MILHARES
+#	substituição relativas aos números >= a 1 milhare
+#	extrai dígitos != 0 para futura transformação
     text = re.sub(r"(\D)1[ ]?000([ ,.?!\r\n€$%])",r"\1mil\2 ",text) #1000
     text = re.sub(r"(\D)1[ ]?([0-9]00)([ ,.?!\r\n€$%])|(\D)1[ ]?(0[0-9]{2})([ ,.?!\r\n€$%])",r"\1\4mil e \2\3\5\6 ",text) #1xxx -> mil e ... em vez de "1 mil e ..."
     text = re.sub(r"(\D)1[ ]?([0-9]{3})([ ,.?!\r\n€$%])",r"\1mil \2\3 ",text) #1xxx -> mil e ... em vez de "1 mil e ..."

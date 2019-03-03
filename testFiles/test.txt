@@ -1,13 +1,12 @@
 
 OUTPUT - ANSWER
 
-qwe 1000000 – um milhão
+qw 1000000 – um milhão
 qw 12000000 – doze milhões
-ioo 12 000 100 – doze milhões e cem
-ioo 12 123 200 – doze milhões cento e vinte e três mil e duzentos
-gfdsg 400003017 – quatrocentos milhões três mil e dezassete
-sdfds 999999999 – novecentos e noventa e nove milhões novecentos e noventa e nove mil novecentos e noventa e nove
-788000984 – setecentos e oitenta e oito milhões novecentos e oitenta e quatro
+iq 12 000 100 – doze milhões e cem
+iq 12 123 200 – doze milhões cento e vinte e três mil e duzentos
+gf 400003017 – quatrocentos milhões três mil e dezassete
+oi 788000984 – setecentos e oitenta e oito milhões novecentos e oitenta e quatro
 
 94 – noventa e quatro
 32,3 – trinta e dois vírgula três
@@ -23,8 +22,8 @@ sdfds 999999999 – novecentos e noventa e nove milhões novecentos e noventa e 
 
 o ordenado é de 200000€. 
 
-4389%. – quatro mil trezentos e oitenta e nove.
-11078. – onze mil e setenta e oito
+4389 – quatro mil trezentos e oitenta e nove.
+11078 – onze mil e setenta e oito
 1003 – mil e três
 dv 1097 – mil e noventa e sete
 dv 23100 – vinte e três mil e cem
@@ -72,6 +71,6 @@ sd 12000 – doze mil
 90 – noventa
 97 – noventa e sete
 100 – cem
-gj 1 000%. – mil
-jh 1000€ – mil
+1 000 – mil
+1000 – mil
 
