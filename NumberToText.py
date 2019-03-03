@@ -106,7 +106,7 @@ def toString(text):
                 if sizeT-size-1>=0: 
                     if text[sizeT-size-1] != "1": #se esse valor antes é diferente de 1, de forma a garantir que n entra em conflito com o caso especial das dezenas
                         out += mapping_units[text[sizeT-size]]
-                        if div != 0 and text[sizeT-size-1]!="0" and text[sizeT-size]!="0":
+                        if div!=0 and ((sizeT-size-2>=0 and text[sizeT-size-2]!="0") or text[sizeT-size-1]!="0" or text[sizeT-size]!="0"):
                             out += " " + mapping_ord[div]
                     else:
                         if div != 0:
@@ -116,7 +116,8 @@ def toString(text):
                     if text[sizeT-size] != "1": #se o algarismo for diferente de 1
                         out += mapping_units[text[sizeT-size]]
                         if div != 0:
-                            out += " " + mapping_ord[div]
+                            out += " "
+                        out += mapping_ord[div]
                     else:
                         out += mapping_ord_um[div]
                 if sizeT-size+1 < sizeT and text[sizeT-size+1]!="0": #se existe um número|,|espaço a seguir e é diferente de 0
@@ -136,7 +137,6 @@ def toString(text):
                     if text[sizeT-size+1]!="0": #se o algarismo das dezenas é diferente de 0
                         out += " e "
             size -= 1
-    
     return out
 
 def toNumber(text):
