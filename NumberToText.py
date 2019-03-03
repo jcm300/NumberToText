@@ -82,6 +82,7 @@ mapping_ord_rev = {
                   }
 
 def toString(text):
+    print(text)
     # String a devolver
     out = ""
     if text[0]==",": #se começar por uma virgula colocar já no resultado final
@@ -89,6 +90,7 @@ def toString(text):
     # remover espaços e virgulas
     text = [t for t in text if t!=" " and t!=","]
     #tamanho do número recebido
+    print(text)
     sizeT = size = len(text)
     # Se for apenas 0
     if sizeT==1 and text[0]=="0":
@@ -106,16 +108,14 @@ def toString(text):
                 if sizeT-size-1>=0: 
                     if text[sizeT-size-1] != "1": #se esse valor antes é diferente de 1, de forma a garantir que n entra em conflito com o caso especial das dezenas
                         out += mapping_units[text[sizeT-size]]
-                        if div == 0:
-                            out += mapping_ord[div]
-                        else:
+                        if div != 0 and text[sizeT-size-1]!="0" and text[sizeT-size]!="0":
                             out += " " + mapping_ord[div]
+                    else:
+                        out += " " + mapping_ord[div]
                 else: #senao, não tem valor antes, é o primeiro algarismo
                     if text[sizeT-size] != "1": #se o algarismo for diferente de 1
                         out += mapping_units[text[sizeT-size]]
-                        if div == 0:
-                            out += mapping_ord[div]
-                        else:
+                        if div != 0:
                             out += " " + mapping_ord[div]
                     else:
                         out += mapping_ord_um[div]
