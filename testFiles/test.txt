@@ -7,13 +7,14 @@ ioo 12 000 100 – doze milhões e cem
 ioo 12 123 200 – doze milhões cento e vinte e três mil e duzentos
 gfdsg 400003017 – quatrocentos milhões três mil e dezassete
 sdfds 999999999 – novecentos e noventa e nove milhões novecentos e noventa e nove mil novecentos e noventa e nove
+788000984 – setecentos e oitenta e oito milhões novecentos e oitenta e quatro
 
+94 – noventa e quatro
 32,3 – trinta e dois vírgula três
 21 – vinte e um
 20 – vinte 
 117 – cento e dezassete
 121 – cento e vinte e um
-1003 – mil e três
 109 – cento e nove
 905 – novecentos e cinco 
 834 – oitocentos e trinta e quatro
@@ -21,25 +22,26 @@ sdfds 999999999 – novecentos e noventa e nove milhões novecentos e noventa e 
 780 – setecentos e oitenta
 
 o ordenado é de 200000€. 
-4389%. quatro mil trezentos e oitenta e nove.
-11078. onze mil e setenta e oito
 
-dfv 1097 – mil e noventa e sete
-dfv 23100 – vinte e três mil e cem
-fdvd 1400 – mil e quatrocentos
-dfd 234200 – duzentos e trinta e quatro mil e duzentos
+4389%. – quatro mil trezentos e oitenta e nove.
+11078. – onze mil e setenta e oito
+1003 – mil e três
+dv 1097 – mil e noventa e sete
+dv 23100 – vinte e três mil e cem
+fd 1400 – mil e quatrocentos
+df 234200 – duzentos e trinta e quatro mil e duzentos
 df 22019 – vinte e dois mil e dezanove
 we 200003 – duzentos mil e três 
-dffd 800217 – oitocentos mil duzentos e dezassete
-fdsvd 1203 – mil duzentos e três
-fvds 56204 – cinquenta e seis mil duzentos e quatro
+df 800217 – oitocentos mil duzentos e dezassete
+fd 1203 – mil duzentos e três
+fv 56204 – cinquenta e seis mil duzentos e quatro
 
 qw 31 – trinta e um
-qwe 400 – quatrocentos
+qw 400 – quatrocentos
 ds 31000 – trinta e um mil
-fref 31400 – trinta e um mil e quatrocentos
-efs 41000 – quarenta e um mil
-sdfd 12000 – doze mil
+fe 31400 – trinta e um mil e quatrocentos
+ef 41000 – quarenta e um mil
+sd 12000 – doze mil
 
 1 – um
 2 – dois
@@ -68,6 +70,8 @@ sdfd 12000 – doze mil
 70 – setenta
 80 – oitenta
 90 – noventa
+97 – noventa e sete
 100 – cem
-ghhj 1 000%. – mil
-jbh 1000€ – mil
+gj 1 000%. – mil
+jh 1000€ – mil
+

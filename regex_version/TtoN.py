@@ -4,7 +4,7 @@ from collections import Counter
 import re
 import unidecode
 
-def numberToText(file):
+def TextToNumber(file):
     text = open(file).read()
     text = replacer(text)
     text2 = aggregate(text)
@@ -52,7 +52,7 @@ def replacer(text):
     text = re.sub("oitocentos","800",text)
 
     text = re.sub(r"novecentos e "+r"(um|dois|três|quatro|cinco|seis|sete|oito|nove)", r"90\1",text)
-    text = re.sub(r"novecentos e ([a-z])|novecentos e ([a-z]+[ ][a-z]+)", r"i9\1\2",text)
+    text = re.sub(r"novecentos e ([a-z])|novecentos e ([a-z]+[ e]*[a-z]+)", r"9\1\2",text)
     text = re.sub("novecentos","900",text)
 
     text = re.sub(r"vinte e ([a-z]+)",r"2\1",text)
@@ -122,4 +122,4 @@ def aggregate(text):
     text = re.sub(r"([0-9])[ ]([0-9])",r"\1\2",text)
     return text
 
-print(numberToText("i.txt"))
+print(TextToNumber("../testFiles/test.txt"))
