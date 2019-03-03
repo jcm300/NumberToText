@@ -259,13 +259,13 @@ def text_to_number(text):
     return text
 
 def printHelp():
-    print("Usage: ./NumberToText.py [OPTIONS] [FILENAME]")
-    print("  or:  ./NumberToText.py [OPTIONS]")
+    print("Usage: ./NumberToText1.py [OPTIONS] [FILENAME]")
+    print("  or:  ./NumberToText1.py [OPTIONS]")
     print("Default behaviour: Convert numbers to portuguese text")
     print("\nOptions:")
     print("  -r\tConvert portuguese text to numbers")
     print("  -h\tHelp")
-    print("\nExample: ./NumberToText.py text.txt")
+    print("\nExample: ./NumberToText1.py text.txt")
 
 #main
 
