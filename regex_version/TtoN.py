@@ -13,11 +13,11 @@ def numberToText(file):
 def replacer(text):
     text = re.sub(r"([a-z]+) vírgula ([a-z]+)",r"\1,\2",text)
 
-    text = re.sub(r"(\w)milhões e ([a-z]+)[.!?\n\r]", r"\1\2",text)
-    text = re.sub("um milhão","1000000",text)
+    text = re.sub(r"(\w)milhões ([a-z]+)([%€.!?\n\r])", r"\1\2\3",text)
+    text = re.sub("um milhão","1 000 000",text)
 
-    text = re.sub(r"(\w)mil e ([a-z]+)[.!?\n\r]", r"\1\2",text)
-    text = re.sub("mil","1000",text)
+    text = re.sub(r"(\w)mil ([a-z]+)([.!?\n\r%€])", r"\1\2\3",text)
+    text = re.sub(r"mil([^h])",r"1000\1",text)
 
     text = re.sub(r"cento e "+r"(um|dois|três|quatro|cinco|seis|sete|oito|nove)", r"10\1",text)
     text = re.sub(r"cento e ([a-z])|cento e ([a-z]+[ ][a-z]+)", r"1\1\2",text)
@@ -111,6 +111,15 @@ def aggregate(text):
     text = re.sub(r"([0-9]{3})[ ]1([0-9]{3})",r"\1\2",text)
     text = re.sub(r"([0-9]{2})[ ]1([0-9]{3})",r"\1\2",text)
     text = re.sub(r"([0-9])[ ]1([0-9]{3})",r"\1\2",text)
+
+    text = re.sub(r"([0-9]+)[ ]milhões[ e]*([0-9]{6})",r"\1\2",text)
+    text = re.sub(r"([0-9]+)[ ]milhões[ e]*([0-9]{5})",r"\1 \2",text)
+    text = re.sub(r"([0-9]+)[ ]milhões[ e]*([0-9]{4})",r"\1 00\2",text)
+    text = re.sub(r"([0-9]+)[ ]milhões[ e]*([0-9]{3})",r"\1 000\2",text)
+    text = re.sub(r"([0-9]+)[ ]milhões[ e]*([0-9]{2})",r"\1 0000\2",text)
+    text = re.sub(r"([0-9]+)[ ]milhões[ e]*([0-9])",r"\1 00000\2",text)
+    text = re.sub(r"([0-9]+)[ ]milhões",r"\1 00000",text)
+    text = re.sub(r"([0-9])[ ]([0-9])",r"\1\2",text)
     return text
 
 print(numberToText("i.txt"))
