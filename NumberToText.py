@@ -219,13 +219,7 @@ def toNumber(text):
                                     out = mapping_ord_rev[word] + out
                                 else:
                                     #colocar o número de zeros necessários
-                                    if num == 0:
-                                        out = "000" + out
-                                    elif num == 1:
-                                        out = "00" + out
-                                    elif num == 2:
-                                        out = "0" + out
-                                num = 0
+                                    out = "0"*(len(mapping_ord_rev[word])-num) + out
                                 # se é a ultima palavra então coloca um 1
                                 if len(words) == i+1:
                                     out = "1" + out
