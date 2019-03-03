@@ -109,7 +109,9 @@ def toString(text):
                         if div != 0 and text[sizeT-size-1]!="0" and text[sizeT-size]!="0":
                             out += " " + mapping_ord[div]
                     else:
-                        out += " " + mapping_ord[div]
+                        if div != 0:
+                            out += " "
+                        out += mapping_ord[div]
                 else: #senao, não tem valor antes, é o primeiro algarismo
                     if text[sizeT-size] != "1": #se o algarismo for diferente de 1
                         out += mapping_units[text[sizeT-size]]
