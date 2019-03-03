@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
+from collections import Counter
 import re
+import unidecode
 
 def numberToText(file):
     text = open(file).read()
